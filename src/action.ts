@@ -45,7 +45,12 @@ export async function run() {
     if (shouldCommentCoverage()) {
       const comment = getCoverageTable(results, CWD)
       if (comment) {
-        await deletePreviousComments(octokit)
+        try {
+          await deletePreviousComments(octokit)
+        } catch(error) {
+          console.error(error);
+        }
+
         const commentPayload = getCommentPayload(comment)
         await octokit.issues.createComment(commentPayload)
       }
